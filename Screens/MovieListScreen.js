@@ -15,6 +15,7 @@ export default class MovieListScreen extends Component {
       genres: [],
       flag: false,
       headerTitle: null,
+      totalPages: null,
     };
   }
 
@@ -49,6 +50,9 @@ export default class MovieListScreen extends Component {
     );
 
     res = await res.json();
+
+    this.setState({totalPages: res.total_pages});
+
     res = await res.results;
 
     this.setState({movies: [...this.state.movies, ...res]});
@@ -56,7 +60,7 @@ export default class MovieListScreen extends Component {
   };
 
   onReachEnd = () => {
-    if (this.state.currentPage < 1000) {
+    if (this.state.currentPage < this.state.totalPages) {
       this.get(this.state.type, this.state.sub);
     }
     console.log(this.state.currentPage);
