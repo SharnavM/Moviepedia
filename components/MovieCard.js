@@ -15,19 +15,36 @@ export default class MovieCard extends Component {
       <View
         style={[
           styles.ViewStyle,
-          {transform: [{scale: this.props.scale ? this.props.scale : 1}]},
+          {
+            transform: [{scale: this.props.scale ? this.props.scale : 1}],
+            borderWidth: this.props.border ? StyleSheet.hairlineWidth : 0,
+          },
         ]}>
-        <Image
-          style={{
-            width: '100%',
-            height: '75%',
-            resizeMode: 'cover',
-            borderRadius: 10,
-            borderBottomRightRadius: 0,
-            borderBottomLeftRadius: 0,
-          }}
-          source={{uri: this.props.imgURL}}
-        />
+        {this.props.imgURL ? (
+          <Image
+            style={{
+              width: '100%',
+              height: '75%',
+              resizeMode: 'cover',
+              borderRadius: 10,
+              borderBottomRightRadius: 0,
+              borderBottomLeftRadius: 0,
+            }}
+            source={{uri: this.props.imgURL}}
+          />
+        ) : (
+          <Image
+            style={{
+              width: '100%',
+              height: '75%',
+              resizeMode: 'cover',
+              borderRadius: 10,
+              borderBottomRightRadius: 0,
+              borderBottomLeftRadius: 0,
+            }}
+            source={require('../assets/noMoviePoster.jpg')}
+          />
+        )}
         <Text style={styles.titleStyle}>
           {this.props.title.length > 28
             ? this.props.title.substr(0, 30) + '...'

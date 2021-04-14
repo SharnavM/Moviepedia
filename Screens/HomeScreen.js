@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MovieCard from '../components/MovieCard';
-import Header from '../components/Header';
 
 export default class HomeScreen extends Component {
   constructor(props) {

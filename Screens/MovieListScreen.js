@@ -45,9 +45,14 @@ export default class MovieListScreen extends Component {
   };
 
   get = async (type, sub) => {
-    var res = await fetch(
-      `https://api.themoviedb.org/3/${type}/${sub}?api_key=<api_key>&language=en-US&page=${this.state.currentPage}`,
-    );
+    if (await this.props.navigation.getParam('url')) {
+      var url =
+        (await this.props.navigation.getParam('url')) +
+        `&page=${this.state.currentPage}`;
+    } else {
+      var url = `https://api.themoviedb.org/3/${type}/${sub}?api_key=<api_key>&language=en-US&page=${this.state.currentPage}`;
+    }
+    var res = await fetch(url);
 
     res = await res.json();
 
@@ -82,6 +87,7 @@ export default class MovieListScreen extends Component {
             onEndReachedThreshold={0.7}
             renderItem={({item, index}) => (
               <MovieCard
+                border={true}
                 scale={0.9}
                 imgURL={'https://image.tmdb.org/t/p/w500/' + item.poster_path}
                 rating={item.vote_average}
