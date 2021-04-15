@@ -116,11 +116,20 @@ export default class FilmsScreen extends Component {
             <View style={{display: 'flex', flexDirection: 'row'}}>
               {this.state.genre.map((item, ind) =>
                 ind <= 9 ? (
-                  <GenreCard
-                    imgURL={this.state.bgImages[ind]}
-                    key={ind}
-                    genre={item.name}
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieList', {
+                        url: `https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&with_genres=${item.id}`,
+                        genre: this.state.genre,
+                        headerTitle: `${item.name} Movies`,
+                      })
+                    }>
+                    <GenreCard
+                      imgURL={this.state.bgImages[ind]}
+                      key={ind}
+                      genre={item.name}
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -130,11 +139,20 @@ export default class FilmsScreen extends Component {
               style={{display: 'flex', flexDirection: 'row', marginTop: -10}}>
               {this.state.genre.map((item, ind) =>
                 ind > 9 ? (
-                  <GenreCard
-                    imgURL={this.state.bgImages[ind]}
-                    key={ind}
-                    genre={item.name}
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieList', {
+                        url: `https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&with_genres=${item.id}`,
+                        genre: this.state.genre,
+                        headerTitle: `${item.name} Movies`,
+                      })
+                    }>
+                    <GenreCard
+                      imgURL={this.state.bgImages[ind]}
+                      key={ind}
+                      genre={item.name}
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>

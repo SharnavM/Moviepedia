@@ -24,6 +24,9 @@ export default class MovieListScreen extends Component {
     this.setState({genres: gen});
 
     var headerTitle = this.props.navigation.getParam('headerTitle');
+    headerTitle = headerTitle.includes('Science Fiction')
+      ? headerTitle.replace('Science Fiction', 'Sci-Fi')
+      : headerTitle;
     this.setState({headerTitle: headerTitle});
 
     var type = await this.props.navigation.getParam('type');
