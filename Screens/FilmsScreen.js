@@ -59,27 +59,19 @@ export default class FilmsScreen extends Component {
   };
 
   getBG = async id => {
-    if (this.state.bgImages.length !== 19) {
-      var page = Math.floor(Math.random() * 4 + 1);
-      console.log(page);
-      var res = await fetch(
-        `https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&with_genres=${id}&page=${page}`,
-      );
+    var page = Math.floor(Math.random() * 4 + 1);
+    console.log(page);
+    var res = await fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&with_genres=${id}&page=${page}`,
+    );
 
-      res = await res.json();
+    res = await res.json();
 
-      res = res.results;
+    res = res.results;
 
-      var rand = res[Math.floor(Math.random() * res.length)];
-      let tmp = rand.genre_ids.splice(0, 2).includes(id);
-      if (tmp) {
-        var url = 'https://image.tmdb.org/t/p/w500' + rand.backdrop_path;
-        this.setState({bgImages: [...this.state.bgImages, url]});
-      } else {
-        this.getBG(id);
-      }
-    } else {
-    }
+    var rand = res[Math.floor(Math.random() * res.length)];
+    var url = 'https://image.tmdb.org/t/p/w500' + rand.backdrop_path;
+    this.setState({bgImages: [...this.state.bgImages, url]});
   };
 
   getUpcoming = async () => {
@@ -190,15 +182,22 @@ export default class FilmsScreen extends Component {
               }}>
               {this.state.upcoming.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.title}
-                    genre={this.findGenres(item.genre_ids[0])}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        item: item,
+                      })
+                    }>
+                    <MovieCard
+                      key={index}
+                      rating={item.vote_average}
+                      title={item.title}
+                      genre={this.findGenres(item.genre_ids[0])}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -245,15 +244,22 @@ export default class FilmsScreen extends Component {
               }}>
               {this.state.nowPlaying.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.title}
-                    genre={this.findGenres(item.genre_ids[0])}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        item: item,
+                      })
+                    }>
+                    <MovieCard
+                      key={item.id}
+                      rating={item.vote_average}
+                      title={item.title}
+                      genre={this.findGenres(item.genre_ids[0])}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>

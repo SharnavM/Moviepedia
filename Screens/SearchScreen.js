@@ -4,7 +4,7 @@ import {
   FlatList,
   TextInput,
   StyleSheet,
-  TouchableHighlight,
+  TouchableOpacity,
   Image,
   Text,
 } from 'react-native';
@@ -48,37 +48,46 @@ export default class SearchScreen extends Component {
         <View style={{marginTop: 20, paddingBottom: 20}}>
           <FlatList
             renderItem={({item}) => (
-              <View
-                style={{
-                  backgroundColor: '#fff',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginLeft: 10,
-                  marginTop: 5,
-                  borderBottomColor: '#00000040',
-                  borderBottomWidth: StyleSheet.hairlineWidth,
-                  padding: 10,
-                }}>
-                <Image
-                  style={{width: 263 / (1.5 * 3), height: 388 / (1.5 * 3)}}
-                  source={{
-                    uri: 'https://image.tmdb.org/t/p/w500/' + item.poster_path,
-                  }}
-                />
-                <Text style={{width: '75%', marginLeft: 5, fontWeight: 'bold'}}>
-                  {item.title || item.name}
-                </Text>
-                <Text
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('MovieDetails', {
+                    item: item,
+                  })
+                }>
+                <View
                   style={{
-                    marginLeft: 5,
-                    fontSize: 10,
-                    marginLeft: item.media_type === 'tv' ? 0 : -20,
-                    marginTop: 70,
-                    textAlign: 'right',
+                    backgroundColor: '#fff',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginLeft: 10,
+                    marginTop: 5,
+                    borderBottomColor: '#00000040',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    padding: 10,
                   }}>
-                  {item.media_type === 'tv' ? 'TV' : 'Movie'}
-                </Text>
-              </View>
+                  <Image
+                    style={{width: 263 / (1.5 * 3), height: 388 / (1.5 * 3)}}
+                    source={{
+                      uri:
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path,
+                    }}
+                  />
+                  <Text
+                    style={{width: '75%', marginLeft: 5, fontWeight: 'bold'}}>
+                    {item.title || item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      fontSize: 10,
+                      marginLeft: item.media_type === 'tv' ? 0 : -20,
+                      marginTop: 70,
+                      textAlign: 'right',
+                    }}>
+                    {item.media_type === 'tv' ? 'TV' : 'Movie'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )}
             keyExtractor={item => item.id}
             data={this.state.results}

@@ -139,17 +139,24 @@ export default class HomeScreen extends Component {
               }}>
               {this.state.topMovies.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.title}
-                    genre={this.findGenres(
-                      item.genre_ids[item.genre_ids.length - 1],
-                    )}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        item: item,
+                      })
+                    }>
+                    <MovieCard
+                      key={item.id}
+                      rating={item.vote_average}
+                      title={item.title}
+                      genre={this.findGenres(
+                        item.genre_ids[item.genre_ids.length - 1],
+                      )}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -198,17 +205,19 @@ export default class HomeScreen extends Component {
               }}>
               {this.state.popularMovies.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.title}
-                    genre={this.findGenres(
-                      item.genre_ids[item.genre_ids.length - 1],
-                    )}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity>
+                    <MovieCard
+                      key={index}
+                      rating={item.vote_average}
+                      title={item.title}
+                      genre={this.findGenres(
+                        item.genre_ids[item.genre_ids.length - 1],
+                      )}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>

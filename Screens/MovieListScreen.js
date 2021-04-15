@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, View, Text, FlatList} from 'react-native';
+import {TouchableOpacity, View, Text, FlatList} from 'react-native';
 import MovieCard from '../components/MovieCard';
 import Header from '../components/Header';
 
@@ -86,14 +86,21 @@ export default class MovieListScreen extends Component {
             onEndReached={this.onReachEnd}
             onEndReachedThreshold={0.7}
             renderItem={({item, index}) => (
-              <MovieCard
-                border={true}
-                scale={0.9}
-                imgURL={'https://image.tmdb.org/t/p/w500/' + item.poster_path}
-                rating={item.vote_average}
-                title={item.title || item.name}
-                genre={this.findGenres(item.genre_ids[0])}
-              />
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('MovieDetails', {
+                    item: item,
+                  })
+                }>
+                <MovieCard
+                  border={true}
+                  scale={0.9}
+                  imgURL={'https://image.tmdb.org/t/p/w500/' + item.poster_path}
+                  rating={item.vote_average}
+                  title={item.title || item.name}
+                  genre={this.findGenres(item.genre_ids[0])}
+                />
+              </TouchableOpacity>
             )}
             numColumns={2}
             keyExtractor={item => item.id}

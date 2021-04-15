@@ -58,10 +58,8 @@ export default class TVScreen extends Component {
   };
 
   getBG = async id => {
-    var page = Math.floor(Math.random() * 2 + 1);
-    console.log(page);
     var res = await fetch(
-      `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${id}&page=${page}`,
+      `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${id}&page=1`,
     );
 
     res = await res.json();
@@ -172,15 +170,22 @@ export default class TVScreen extends Component {
               }}>
               {this.state.topRated.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.name}
-                    genre={this.findGenres(item.genre_ids[0])}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        item: item,
+                      })
+                    }>
+                    <MovieCard
+                      key={index}
+                      rating={item.vote_average}
+                      title={item.name}
+                      genre={this.findGenres(item.genre_ids[0])}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -227,15 +232,22 @@ export default class TVScreen extends Component {
               }}>
               {this.state.nowPlaying.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.name}
-                    genre={this.findGenres(item.genre_ids[0])}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        item: item,
+                      })
+                    }>
+                    <MovieCard
+                      key={index}
+                      rating={item.vote_average}
+                      title={item.name}
+                      genre={this.findGenres(item.genre_ids[0])}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
