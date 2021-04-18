@@ -47,29 +47,33 @@ export default class MovieCard extends Component {
         )}
         <Text style={styles.titleStyle}>
           {this.props.title.length > 28
-            ? this.props.title.substr(0, 30) + '...'
+            ? `${this.props.title.substr(0, 30)}...`
             : this.props.title}
         </Text>
         <Text style={styles.GenreStyle}>{this.props.genre}</Text>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            position: 'absolute',
-            right: 7,
-            bottom: 10,
-          }}>
-          <Image
+        {this.props.rating ? (
+          <View
             style={{
-              width: 8 * 2,
-              height: 8 * 2,
-              resizeMode: 'contain',
-            }}
-            source={require('../assets/star.png')}
-          />
+              display: 'flex',
+              flexDirection: 'row',
+              position: 'absolute',
+              right: 7,
+              bottom: 10,
+            }}>
+            <Image
+              style={{
+                width: 8 * 2,
+                height: 8 * 2,
+                resizeMode: 'contain',
+              }}
+              source={require('../assets/star.png')}
+            />
 
-          <Text style={{fontSize: 8, marginLeft: 2}}>{this.props.rating}</Text>
-        </View>
+            <Text style={{fontSize: 8, marginLeft: 2}}>
+              {this.props.rating}
+            </Text>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -92,11 +96,11 @@ const styles = StyleSheet.create({
     marginLeft: 3,
   },
   GenreStyle: {
-    width: '100%',
+    width: '97%',
     fontSize: 8,
-    marginLeft: 3,
+    marginLeft: 0,
     position: 'absolute',
-    right: -4,
+    right: -0,
     bottom: 8,
   },
 });

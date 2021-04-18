@@ -142,7 +142,7 @@ export default class HomeScreen extends Component {
                   <TouchableOpacity
                     onPress={() =>
                       this.props.navigation.navigate('MovieDetails', {
-                        item: item,
+                        itemID: item.id,
                       })
                     }>
                     <MovieCard
@@ -205,9 +205,14 @@ export default class HomeScreen extends Component {
               }}>
               {this.state.popularMovies.map((item, index) =>
                 index < 9 ? (
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieDetails', {
+                        itemID: item.id,
+                      })
+                    }>
                     <MovieCard
-                      key={index}
+                      key={item.id}
                       rating={item.vote_average}
                       title={item.title}
                       genre={this.findGenres(
@@ -266,15 +271,23 @@ export default class HomeScreen extends Component {
               }}>
               {this.state.popularTV.map((item, index) =>
                 index < 9 ? (
-                  <MovieCard
-                    key={index}
-                    rating={item.vote_average}
-                    title={item.name}
-                    genre={this.findTVGenres(item.genre_ids[0])}
-                    imgURL={
-                      'https://image.tmdb.org/t/p/w500/' + item.poster_path
-                    }
-                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate('MovieDetails', {
+                        itemID: item.id,
+                        type: 'tv',
+                      });
+                    }}>
+                    <MovieCard
+                      key={item.id}
+                      rating={item.vote_average}
+                      title={item.name}
+                      genre={this.findTVGenres(item.genre_ids[0])}
+                      imgURL={
+                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      }
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>

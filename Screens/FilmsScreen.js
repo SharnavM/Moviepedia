@@ -90,6 +90,8 @@ export default class FilmsScreen extends Component {
       }-${mm}-${dd}`,
     });
 
+    console.log(this.state.upcomingURL);
+
     res = await res.json();
 
     res = res.results;
@@ -201,13 +203,14 @@ export default class FilmsScreen extends Component {
               {this.state.upcoming.map((item, index) =>
                 index < 9 ? (
                   <TouchableOpacity
-                    onPress={() =>
+                    onPress={() => {
+                      console.log(item.id);
                       this.props.navigation.navigate('MovieDetails', {
-                        item: item,
-                      })
-                    }>
+                        itemID: item.id,
+                      });
+                    }}>
                     <MovieCard
-                      key={index}
+                      key={item.id}
                       rating={item.vote_average}
                       title={item.title}
                       genre={this.findGenres(item.genre_ids[0])}
@@ -265,7 +268,7 @@ export default class FilmsScreen extends Component {
                   <TouchableOpacity
                     onPress={() =>
                       this.props.navigation.navigate('MovieDetails', {
-                        item: item,
+                        itemID: item.id,
                       })
                     }>
                     <MovieCard

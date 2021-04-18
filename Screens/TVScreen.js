@@ -67,9 +67,12 @@ export default class TVScreen extends Component {
     res = res.results;
 
     var rand = res[Math.floor(Math.random() * res.length)];
-
-    var url = 'https://image.tmdb.org/t/p/w500' + rand.backdrop_path;
-    this.setState({bgImages: [...this.state.bgImages, url]});
+    if (rand.backdrop_path !== null) {
+      var url = 'https://image.tmdb.org/t/p/w500' + rand.backdrop_path;
+      this.setState({bgImages: [...this.state.bgImages, url]});
+    } else {
+      this.getBG(id);
+    }
   };
 
   getTopRated = async () => {
@@ -103,11 +106,20 @@ export default class TVScreen extends Component {
             <View style={{display: 'flex', flexDirection: 'row'}}>
               {this.state.genre.map((item, ind) =>
                 ind <= 9 ? (
-                  <GenreCard
-                    imgURL={this.state.bgImages[ind]}
-                    key={ind}
-                    genre={item.name}
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieList', {
+                        url: `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${item.id}`,
+                        genre: this.state.genre,
+                        headerTitle: `${item.name} Shows`,
+                      })
+                    }>
+                    <GenreCard
+                      imgURL={this.state.bgImages[ind]}
+                      key={ind}
+                      genre={item.name}
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -117,11 +129,20 @@ export default class TVScreen extends Component {
               style={{display: 'flex', flexDirection: 'row', marginTop: -10}}>
               {this.state.genre.map((item, ind) =>
                 ind > 9 ? (
-                  <GenreCard
-                    imgURL={this.state.bgImages[ind]}
-                    key={ind}
-                    genre={item.name}
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('MovieList', {
+                        url: `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${item.id}`,
+                        genre: this.state.genre,
+                        headerTitle: `${item.name} Shows`,
+                      })
+                    }>
+                    <GenreCard
+                      imgURL={this.state.bgImages[ind]}
+                      key={ind}
+                      genre={item.name}
+                    />
+                  </TouchableOpacity>
                 ) : null,
               )}
             </View>
@@ -173,7 +194,8 @@ export default class TVScreen extends Component {
                   <TouchableOpacity
                     onPress={() =>
                       this.props.navigation.navigate('MovieDetails', {
-                        item: item,
+                        itemID: item.id,
+                        type: 'tv',
                       })
                     }>
                     <MovieCard
@@ -235,7 +257,8 @@ export default class TVScreen extends Component {
                   <TouchableOpacity
                     onPress={() =>
                       this.props.navigation.navigate('MovieDetails', {
-                        item: item,
+                        itemID: item.id,
+                        type: 'tv',
                       })
                     }>
                     <MovieCard

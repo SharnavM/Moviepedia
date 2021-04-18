@@ -51,7 +51,8 @@ export default class SearchScreen extends Component {
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate('MovieDetails', {
-                    item: item,
+                    itemID: item.id,
+                    type: item.media_type === 'movie' ? null : 'tv',
                   })
                 }>
                 <View
