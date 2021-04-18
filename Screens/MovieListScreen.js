@@ -92,7 +92,8 @@ export default class MovieListScreen extends Component {
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate('MovieDetails', {
-                    item: item,
+                    itemID: item.id,
+                    type: this.state.type === 'tv' ? 'tv' : null,
                   })
                 }>
                 <MovieCard

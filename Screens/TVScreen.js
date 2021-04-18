@@ -112,6 +112,7 @@ export default class TVScreen extends Component {
                         url: `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${item.id}`,
                         genre: this.state.genre,
                         headerTitle: `${item.name} Shows`,
+                        type: 'tv',
                       })
                     }>
                     <GenreCard
@@ -135,6 +136,7 @@ export default class TVScreen extends Component {
                         url: `https://api.themoviedb.org/3/discover/tv?api_key=<api_key>&with_genres=${item.id}`,
                         genre: this.state.genre,
                         headerTitle: `${item.name} Shows`,
+                        type: 'tv',
                       })
                     }>
                     <GenreCard
