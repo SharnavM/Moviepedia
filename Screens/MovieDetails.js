@@ -15,6 +15,10 @@ import MovieCard from '../components/MovieCard';
 export default class MovieDetailsScreen extends Component {
   constructor(props) {
     super(props);
+
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       item: null,
       months: [
@@ -37,6 +41,7 @@ export default class MovieDetailsScreen extends Component {
       reviews: [],
       reviewRender: [],
       dark: null,
+      fontScaling: null,
     };
   }
 
@@ -51,6 +56,10 @@ export default class MovieDetailsScreen extends Component {
     let t = await AsyncStorage.getItem('dark');
 
     this.setState({dark: t === 'true'});
+
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
   }
 
   getReviews = async (id, type = undefined) => {
@@ -174,6 +183,8 @@ export default class MovieDetailsScreen extends Component {
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScaling;
+
     if (this.state.item) {
       return (
         <View
@@ -215,7 +226,7 @@ export default class MovieDetailsScreen extends Component {
                     style={{
                       width: '75%',
                       fontWeight: 'bold',
-                      fontSize: 15,
+                      fontSize: 15 * fs,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
                     {this.state.item.title ||
@@ -224,7 +235,7 @@ export default class MovieDetailsScreen extends Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: 11,
+                      fontSize: 11 * fs,
                       marginTop: 7.5,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
@@ -233,7 +244,8 @@ export default class MovieDetailsScreen extends Component {
                         this.state.item.episode_run_time[0],
                     )}
                   </Text>
-                  <Text style={{fontSize: 11, color: d ? '#f5f6f7' : 'black'}}>
+                  <Text
+                    style={{fontSize: 11 * fs, color: d ? '#f5f6f7' : 'black'}}>
                     {this.convertDate(
                       this.state.item.release_date ||
                         this.state.item.first_air_date,
@@ -258,9 +270,12 @@ export default class MovieDetailsScreen extends Component {
                       />
                     </View>
                     <Text
-                      style={{fontSize: 16, color: d ? '#f5f6f7' : 'black'}}>
+                      style={{
+                        fontSize: 16 * fs,
+                        color: d ? '#f5f6f7' : 'black',
+                      }}>
                       {this.state.item.vote_average}
-                      <Text style={{fontSize: 10}}>
+                      <Text style={{fontSize: 10 * fs}}>
                         /10 | {this.state.item.vote_count}
                       </Text>
                     </Text>
@@ -268,7 +283,7 @@ export default class MovieDetailsScreen extends Component {
                   <Text
                     style={{
                       fontWeight: 'bold',
-                      fontSize: 12,
+                      fontSize: 12 * fs,
                       marginTop: 15,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
@@ -277,7 +292,7 @@ export default class MovieDetailsScreen extends Component {
                   <Text
                     style={{
                       width: '95%',
-                      fontSize: 11,
+                      fontSize: 11 * fs,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
                     {this.state.item.overview}
@@ -327,7 +342,7 @@ export default class MovieDetailsScreen extends Component {
                     <Text
                       style={{
                         fontWeight: 'bold',
-                        fontSize: 11,
+                        fontSize: 11 * fs,
                         marginTop: 2,
                         marginRight: 2,
                         color: d ? '#f5f6f7' : 'black',
@@ -352,7 +367,7 @@ export default class MovieDetailsScreen extends Component {
                             <Text
                               style={{
                                 textAlign: 'center',
-                                fontSize: 10,
+                                fontSize: 10 * fs,
                                 width: '100%',
                                 marginTop: 0,
                               }}>
@@ -378,7 +393,7 @@ export default class MovieDetailsScreen extends Component {
                     style={{
                       width: '75%',
                       fontWeight: 'bold',
-                      fontSize: 15,
+                      fontSize: 15 * fs,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
                     Cast
@@ -416,7 +431,7 @@ export default class MovieDetailsScreen extends Component {
                     style={{
                       width: '75%',
                       fontWeight: 'bold',
-                      fontSize: 15,
+                      fontSize: 15 * fs,
                       color: d ? '#f5f6f7' : 'black',
                     }}>
                     Reviews
@@ -472,7 +487,7 @@ export default class MovieDetailsScreen extends Component {
                               <Text
                                 style={{
                                   width: '100%',
-                                  fontSize: 11,
+                                  fontSize: 11 * fs,
                                   color: d ? '#f5f6f7' : 'black',
                                 }}>
                                 {item.content}
@@ -484,7 +499,7 @@ export default class MovieDetailsScreen extends Component {
                         <Text
                           style={{
                             fontStyle: 'italic',
-                            fontSize: 11,
+                            fontSize: 11 * fs,
                             color: '#898989',
                           }}>
                           No Reviews
@@ -504,7 +519,7 @@ export default class MovieDetailsScreen extends Component {
                     <Text
                       style={{
                         textAlign: 'center',
-                        fontSize: 12,
+                        fontSize: 12 * fs,
                         color: '#0645ff',
                         textDecorationLine: 'underline',
                       }}>

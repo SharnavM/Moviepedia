@@ -13,10 +13,15 @@ import {
 export default class SearchScreen extends Component {
   constructor(props) {
     super(props);
+
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       placeholder: 'Search Movies and TV Shows',
       results: [],
       dark: null,
+      fontScaling: null,
     };
   }
 
@@ -40,10 +45,16 @@ export default class SearchScreen extends Component {
     let t = await AsyncStorage.getItem('dark');
 
     this.setState({dark: t === 'true'});
+
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
   }
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScaling;
+
     return (
       <View
         style={{minHeight: '100%', backgroundColor: d ? '#242526' : '#fff'}}>
@@ -62,6 +73,7 @@ export default class SearchScreen extends Component {
             {
               color: d ? '#7f8492' : '#666',
               backgroundColor: d ? '#18191a' : '#ddd',
+              fontSize: 12 * fs,
             },
           ]}></TextInput>
         <View style={{marginTop: 20, paddingBottom: 20}}>
@@ -112,7 +124,7 @@ export default class SearchScreen extends Component {
                   <Text
                     style={{
                       marginLeft: 5,
-                      fontSize: 10,
+                      fontSize: 10 * fs,
                       marginLeft: item.media_type === 'tv' ? 0 : -20,
                       marginTop: 70,
                       textAlign: 'right',

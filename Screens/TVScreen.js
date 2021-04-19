@@ -14,11 +14,15 @@ export default class TVScreen extends Component {
   constructor(props) {
     super(props);
 
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       genre: [],
       bgImages: [],
       topRated: [],
       nowPlaying: [],
+      fontScaling: null,
     };
   }
 
@@ -96,10 +100,16 @@ export default class TVScreen extends Component {
     let t = await AsyncStorage.getItem('dark');
 
     this.setState({dark: t === 'true'});
+
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
   }
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScaling;
+
     return (
       <View>
         <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
@@ -107,7 +117,11 @@ export default class TVScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Browse by Genre
             </Text>
@@ -171,7 +185,11 @@ export default class TVScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Top Rated Shows
             </Text>
@@ -192,7 +210,7 @@ export default class TVScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -246,7 +264,11 @@ export default class TVScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Now Airing
             </Text>
@@ -267,7 +289,7 @@ export default class TVScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },

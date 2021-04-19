@@ -13,6 +13,9 @@ export default class MovieListScreen extends Component {
   constructor(props) {
     super(props);
 
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       currentPage: 1,
       movies: [],
@@ -23,6 +26,7 @@ export default class MovieListScreen extends Component {
       headerTitle: null,
       totalPages: null,
       dark: null,
+      fontScaling: null,
     };
   }
 
@@ -30,6 +34,10 @@ export default class MovieListScreen extends Component {
     let t = await AsyncStorage.getItem('dark');
     var gen = await this.props.navigation.getParam('genre');
     this.setState({genres: gen, dark: t === 'true'});
+
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
 
     var headerTitle = this.props.navigation.getParam('headerTitle');
     headerTitle = headerTitle.includes('Science Fiction')
@@ -83,6 +91,8 @@ export default class MovieListScreen extends Component {
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScaling;
+
     return (
       <View style={{marginLeft: -10, backgroundColor: d ? '#242526' : 'white'}}>
         <Header

@@ -1,17 +1,24 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, AsyncStorage} from 'react-native';
 
 export default class MovieCard extends Component {
   constructor(props) {
     super(props);
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
 
-    this.state = {img: null};
+    this.state = {img: null, fontScaling: null};
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
+  }
 
   render() {
     var d = this.props.dark;
+    var fs = this.state.fontScaling;
     return (
       <View
         style={[
@@ -48,12 +55,20 @@ export default class MovieCard extends Component {
             source={require('../assets/noMoviePoster.jpg')}
           />
         )}
-        <Text style={[styles.titleStyle, {color: d ? '#f5f6f7' : 'black'}]}>
+        <Text
+          style={[
+            styles.titleStyle,
+            {color: d ? '#f5f6f7' : 'black', fontSize: 10 * fs},
+          ]}>
           {this.props.title.length > 28
             ? `${this.props.title.substr(0, 30)}...`
             : this.props.title}
         </Text>
-        <Text style={[styles.GenreStyle, {color: d ? '#f5f6f7' : 'black'}]}>
+        <Text
+          style={[
+            styles.GenreStyle,
+            {color: d ? '#f5f6f7' : 'black', fontSize: 8 * fs},
+          ]}>
           {this.props.genre}
         </Text>
         {this.props.rating ? (
@@ -76,7 +91,7 @@ export default class MovieCard extends Component {
 
             <Text
               style={{
-                fontSize: 8,
+                fontSize: 9 * fs,
                 marginLeft: 2,
                 color: d ? '#f5f6f7' : 'black',
               }}>
@@ -102,12 +117,10 @@ const styles = StyleSheet.create({
   titleStyle: {
     fontWeight: 'bold',
     width: '95%',
-    fontSize: 10,
     marginLeft: 3,
   },
   GenreStyle: {
     width: '97%',
-    fontSize: 8,
     marginLeft: 0,
     position: 'absolute',
     right: -0,

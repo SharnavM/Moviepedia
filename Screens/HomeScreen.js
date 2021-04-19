@@ -13,12 +13,16 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
 
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       topMovies: [],
       genres: [],
       popularMovies: [],
       popularTV: [],
       TVgenres: [],
+      fontScale: null,
     };
   }
 
@@ -103,14 +107,23 @@ export default class HomeScreen extends Component {
     if (t === null) {
       await AsyncStorage.setItem('dark', 'false');
     }
-
     t = await AsyncStorage.getItem('dark');
+    this.setState({
+      dark: t === 'true',
+    });
 
-    this.setState({dark: t === 'true'});
+    if ((await AsyncStorage.getItem('fontScale')) === null) {
+      await AsyncStorage.setItem('fontScale', '1.5');
+    }
+
+    this.setState({
+      fontScale: parseFloat(await AsyncStorage.getItem('fontScale')),
+    });
   }
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScale;
     return (
       <View>
         <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
@@ -118,7 +131,11 @@ export default class HomeScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Top Movies
             </Text>
@@ -139,7 +156,7 @@ export default class HomeScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -191,7 +208,11 @@ export default class HomeScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Popular Movies
             </Text>
@@ -212,7 +233,7 @@ export default class HomeScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -264,7 +285,11 @@ export default class HomeScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Popular Shows
             </Text>
@@ -285,7 +310,7 @@ export default class HomeScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -336,7 +361,6 @@ export default class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   mainTitle: {
-    fontSize: 15,
     marginLeft: 10,
     fontWeight: 'bold',
   },

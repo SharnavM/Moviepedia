@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, AsyncStorage} from 'react-native';
 
 export default class GenreCard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {img: null};
+    this.state = {img: null, fontScaling: null};
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
+  }
 
   render() {
+    var fs = this.state.fontScaling;
     return (
       <View style={[styles.ViewStyle]}>
         <View
@@ -42,7 +47,9 @@ export default class GenreCard extends Component {
               left: 0,
             }}
           />
-          <Text style={styles.GenreStyle}>{this.props.genre}</Text>
+          <Text style={[styles.GenreStyle, {fontSize: 15 * fs}]}>
+            {this.props.genre}
+          </Text>
         </View>
       </View>
     );
@@ -60,7 +67,6 @@ const styles = StyleSheet.create({
   },
 
   GenreStyle: {
-    fontSize: 15,
     zIndex: 10,
     color: 'white',
     position: 'absolute',

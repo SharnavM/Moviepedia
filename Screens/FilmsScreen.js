@@ -14,6 +14,9 @@ export default class FilmsScreen extends Component {
   constructor(props) {
     super(props);
 
+    if (Text.defaultProps == null) Text.defaultProps = {};
+    Text.defaultProps.allowFontScaling = false;
+
     this.state = {
       genre: [],
       bgImages: [],
@@ -21,6 +24,7 @@ export default class FilmsScreen extends Component {
       nowPlaying: [],
       upcomingURL: '',
       dark: null,
+      fontScaling: null,
     };
   }
 
@@ -105,10 +109,16 @@ export default class FilmsScreen extends Component {
 
     let t = await AsyncStorage.getItem('dark');
     this.setState({dark: t === 'true'});
+
+    let fs = await AsyncStorage.getItem('fontScale');
+
+    this.setState({fontScaling: parseFloat(fs)});
   }
 
   render() {
     var d = this.state.dark;
+    var fs = this.state.fontScaling;
+
     return (
       <View>
         <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
@@ -116,7 +126,11 @@ export default class FilmsScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Browse by Genre
             </Text>
@@ -177,7 +191,11 @@ export default class FilmsScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: 15 * fs,
+                },
               ]}>
               Upcoming
             </Text>
@@ -199,7 +217,7 @@ export default class FilmsScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -252,7 +270,11 @@ export default class FilmsScreen extends Component {
             <Text
               style={[
                 styles.mainTitle,
-                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+                {
+                  marginTop: 15,
+                  color: d ? '#f5f6f7' : 'black',
+                  fontSize: fs * 15,
+                },
               ]}>
               Now Playing
             </Text>
@@ -273,7 +295,7 @@ export default class FilmsScreen extends Component {
               <Text
                 style={[
                   {
-                    fontSize: 10,
+                    fontSize: 10 * fs,
                     textAlignVertical: 'center',
                     color: d ? '#f5f6f7' : 'black',
                   },
@@ -323,7 +345,6 @@ export default class FilmsScreen extends Component {
 
 const styles = StyleSheet.create({
   mainTitle: {
-    fontSize: 15,
     marginLeft: 10,
     fontWeight: 'bold',
   },
