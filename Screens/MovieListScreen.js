@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, View, Text, FlatList} from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  FlatList,
+  AsyncStorage,
+} from 'react-native';
 import MovieCard from '../components/MovieCard';
 import Header from '../components/Header';
 
@@ -16,12 +22,14 @@ export default class MovieListScreen extends Component {
       flag: false,
       headerTitle: null,
       totalPages: null,
+      dark: null,
     };
   }
 
   async componentDidMount() {
+    let t = await AsyncStorage.getItem('dark');
     var gen = await this.props.navigation.getParam('genre');
-    this.setState({genres: gen});
+    this.setState({genres: gen, dark: t === 'true'});
 
     var headerTitle = this.props.navigation.getParam('headerTitle');
     headerTitle = headerTitle.includes('Science Fiction')
@@ -71,13 +79,14 @@ export default class MovieListScreen extends Component {
     if (this.state.currentPage < this.state.totalPages) {
       this.get(this.state.type, this.state.sub);
     }
-    console.log(this.state.currentPage);
   };
 
   render() {
+    var d = this.state.dark;
     return (
-      <View style={{marginLeft: -10}}>
+      <View style={{marginLeft: -10, backgroundColor: d ? '#242526' : 'white'}}>
         <Header
+          dark={d ? true : false}
           navigation={this.props.navigation}
           backBtn
           marginLeft={13}
@@ -97,9 +106,14 @@ export default class MovieListScreen extends Component {
                   })
                 }>
                 <MovieCard
+                  dark={d ? true : false}
                   border={true}
                   scale={0.9}
-                  imgURL={'https://image.tmdb.org/t/p/w500/' + item.poster_path}
+                  imgURL={
+                    item.poster_path
+                      ? 'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                      : null
+                  }
                   rating={item.vote_average}
                   title={item.title || item.name}
                   genre={this.findGenres(item.genre_ids[0])}

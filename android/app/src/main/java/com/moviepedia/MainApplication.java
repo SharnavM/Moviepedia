@@ -1,4 +1,4 @@
-package com.moviepedia;
+package com.techysharnav.moviepedia;
 
 import android.app.Application;
 import android.content.Context;

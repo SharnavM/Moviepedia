@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Linking,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import MovieCard from '../components/MovieCard';
 
@@ -35,6 +36,7 @@ export default class MovieDetailsScreen extends Component {
       mainCrew: [],
       reviews: [],
       reviewRender: [],
+      dark: null,
     };
   }
 
@@ -45,6 +47,10 @@ export default class MovieDetailsScreen extends Component {
     this.getReviews(itemID, type);
     this.getDetails(itemID, type);
     this.getCredits(itemID, type);
+
+    let t = await AsyncStorage.getItem('dark');
+
+    this.setState({dark: t === 'true'});
   }
 
   getReviews = async (id, type = undefined) => {
@@ -56,7 +62,6 @@ export default class MovieDetailsScreen extends Component {
 
     res = await res.json();
     res = await res.results;
-    console.log(res, 'res');
     if (res !== []) {
       this.setState({
         reviews: res,
@@ -65,8 +70,6 @@ export default class MovieDetailsScreen extends Component {
     } else {
       this.setState({reviewRender: ['No Reviews']});
     }
-
-    console.log(this.state.reviewRender, 'state');
   };
 
   convertRuntime = time => {
@@ -78,15 +81,19 @@ export default class MovieDetailsScreen extends Component {
   };
 
   convertDate = date => {
-    let d = date.split('-');
+    if (date !== null) {
+      let d = date.split('-');
 
-    let yy = d[0];
-    let mm = d[1];
-    let dd = d[2];
+      let yy = d[0];
+      let mm = d[1];
+      let dd = d[2];
 
-    mm = this.state.months[mm - 1];
+      mm = this.state.months[mm - 1];
 
-    return `${dd} ${mm}, ${yy}`;
+      return `${dd} ${mm}, ${yy}`;
+    } else {
+      return '';
+    }
   };
 
   openURL = item => {
@@ -151,7 +158,6 @@ export default class MovieDetailsScreen extends Component {
     let x = this.state.reviewRender[this.state.reviewRender.length - 1];
 
     x = this.state.reviews.indexOf(x);
-    console.log(x);
     if (x != -1) {
       for (var i = 0; i < 2; i++) {
         if (x + i <= this.state.reviews.length - 1) {
@@ -167,15 +173,17 @@ export default class MovieDetailsScreen extends Component {
   };
 
   render() {
+    var d = this.state.dark;
     if (this.state.item) {
       return (
-        <View style={{minHeight: '100%', backgroundColor: '#fff'}}>
+        <View
+          style={{minHeight: '100%', backgroundColor: d ? '#18191a' : '#fff'}}>
           <ScrollView contentContainerStyle={{paddingBottom: 100}}>
             <View
               style={{
                 minHeight: '100%',
                 width: '100%',
-                backgroundColor: '#fff',
+                backgroundColor: d ? '#18191a' : '#fff',
               }}>
               <Image
                 style={{
@@ -185,7 +193,7 @@ export default class MovieDetailsScreen extends Component {
                   aspectRatio: 500 / 281,
                 }}
                 source={{
-                  uri: `https://image.tmdb.org/t/p/w500${this.state.item.backdrop_path}`,
+                  uri: `https://image.tmdb.org/t/p/original${this.state.item.backdrop_path}`,
                 }}
               />
               <View
@@ -199,23 +207,33 @@ export default class MovieDetailsScreen extends Component {
                     width: '95%',
                     borderRadius: 10,
                     marginTop: -60,
-                    backgroundColor: '#fff',
-                    elevation: 5,
+                    backgroundColor: d ? '#242526' : '#fff',
+                    elevation: d ? 0 : 5,
                     padding: 10,
                   }}>
                   <Text
-                    style={{width: '75%', fontWeight: 'bold', fontSize: 15}}>
+                    style={{
+                      width: '75%',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     {this.state.item.title ||
                       this.state.item.name ||
                       this.state.item.original_name}
                   </Text>
-                  <Text style={{fontSize: 11, marginTop: 7.5}}>
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      marginTop: 7.5,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     {this.convertRuntime(
                       this.state.item.runtime ||
                         this.state.item.episode_run_time[0],
                     )}
                   </Text>
-                  <Text style={{fontSize: 11}}>
+                  <Text style={{fontSize: 11, color: d ? '#f5f6f7' : 'black'}}>
                     {this.convertDate(
                       this.state.item.release_date ||
                         this.state.item.first_air_date,
@@ -239,7 +257,8 @@ export default class MovieDetailsScreen extends Component {
                         source={require('../assets/star.png')}
                       />
                     </View>
-                    <Text style={{fontSize: 16}}>
+                    <Text
+                      style={{fontSize: 16, color: d ? '#f5f6f7' : 'black'}}>
                       {this.state.item.vote_average}
                       <Text style={{fontSize: 10}}>
                         /10 | {this.state.item.vote_count}
@@ -247,10 +266,20 @@ export default class MovieDetailsScreen extends Component {
                     </Text>
                   </View>
                   <Text
-                    style={{fontWeight: 'bold', fontSize: 12, marginTop: 15}}>
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 12,
+                      marginTop: 15,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     Overview
                   </Text>
-                  <Text style={{width: '95%', fontSize: 11}}>
+                  <Text
+                    style={{
+                      width: '95%',
+                      fontSize: 11,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     {this.state.item.overview}
                   </Text>
                   {this.state.item.videos.results.length != 0 ? (
@@ -285,8 +314,8 @@ export default class MovieDetailsScreen extends Component {
                     width: '95%',
                     borderRadius: 10,
                     marginTop: 20,
-                    backgroundColor: '#fff',
-                    elevation: 5,
+                    backgroundColor: d ? '#242526' : '#fff',
+                    elevation: d ? 0 : 5,
                     padding: 10,
                   }}>
                   <View
@@ -301,10 +330,12 @@ export default class MovieDetailsScreen extends Component {
                         fontSize: 11,
                         marginTop: 2,
                         marginRight: 2,
+                        color: d ? '#f5f6f7' : 'black',
                       }}>
                       Tags:
                     </Text>
                     <FlatList
+                      style={{marginLeft: 3}}
                       horizontal={true}
                       data={this.state.item.genres}
                       renderItem={elem => {
@@ -339,17 +370,23 @@ export default class MovieDetailsScreen extends Component {
                     width: '95%',
                     borderRadius: 10,
                     marginTop: 20,
-                    backgroundColor: '#fff',
-                    elevation: 5,
+                    backgroundColor: d ? '#242526' : '#fff',
+                    elevation: d ? 0 : 5,
                     padding: 10,
                   }}>
                   <Text
-                    style={{width: '75%', fontWeight: 'bold', fontSize: 15}}>
+                    style={{
+                      width: '75%',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     Cast
                   </Text>
                   <ScrollView horizontal={true}>
                     {this.state.cast.map((item, index) => (
                       <MovieCard
+                        dark={d ? true : false}
                         scale={0.95}
                         border={true}
                         key={index}
@@ -371,12 +408,17 @@ export default class MovieDetailsScreen extends Component {
                     width: '95%',
                     borderRadius: 10,
                     marginTop: 20,
-                    backgroundColor: '#fff',
-                    elevation: 5,
+                    backgroundColor: d ? '#242526' : '#fff',
+                    elevation: d ? 0 : 5,
                     padding: 10,
                   }}>
                   <Text
-                    style={{width: '75%', fontWeight: 'bold', fontSize: 15}}>
+                    style={{
+                      width: '75%',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     Reviews
                   </Text>
                   <View style={{width: '95%', marginTop: 10}}>
@@ -420,10 +462,19 @@ export default class MovieDetailsScreen extends Component {
                                 marginLeft: 10,
                                 marginTop: -2,
                               }}>
-                              <Text style={{fontWeight: 'bold'}}>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  color: d ? '#f5f6f7' : 'black',
+                                }}>
                                 {item.author}
                               </Text>
-                              <Text style={{width: '100%', fontSize: 11}}>
+                              <Text
+                                style={{
+                                  width: '100%',
+                                  fontSize: 11,
+                                  color: d ? '#f5f6f7' : 'black',
+                                }}>
                                 {item.content}
                               </Text>
                             </View>
@@ -454,7 +505,7 @@ export default class MovieDetailsScreen extends Component {
                       style={{
                         textAlign: 'center',
                         fontSize: 12,
-                        color: '#0645CD',
+                        color: '#0645ff',
                         textDecorationLine: 'underline',
                       }}>
                       {this.state.reviews.length ===

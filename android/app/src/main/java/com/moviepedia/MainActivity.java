@@ -1,4 +1,4 @@
-package com.moviepedia;
+package com.techysharnav.moviepedia;
 
 import com.facebook.react.ReactActivity;
 

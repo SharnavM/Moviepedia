@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import GenreCard from '../components/GenreCard';
 import MovieCard from '../components/MovieCard';
@@ -87,18 +88,27 @@ export default class TVScreen extends Component {
     this.setState({topRated: res});
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getGenre();
     this.getTopRated();
     this.getNowPlaying();
+
+    let t = await AsyncStorage.getItem('dark');
+
+    this.setState({dark: t === 'true'});
   }
 
   render() {
+    var d = this.state.dark;
     return (
       <View>
-        <ScrollView style={{backgroundColor: '#fff'}}>
+        <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
               Browse by Genre
             </Text>
           </View>
@@ -116,6 +126,7 @@ export default class TVScreen extends Component {
                       })
                     }>
                     <GenreCard
+                      dark={d ? true : false}
                       imgURL={this.state.bgImages[ind]}
                       key={ind}
                       genre={item.name}
@@ -140,6 +151,7 @@ export default class TVScreen extends Component {
                       })
                     }>
                     <GenreCard
+                      dark={d ? true : false}
                       imgURL={this.state.bgImages[ind]}
                       key={ind}
                       genre={item.name}
@@ -151,12 +163,16 @@ export default class TVScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
               Top Rated Shows
             </Text>
             <TouchableOpacity
@@ -178,6 +194,7 @@ export default class TVScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -201,12 +218,16 @@ export default class TVScreen extends Component {
                       })
                     }>
                     <MovieCard
+                      dark={d ? true : false}
                       key={index}
                       rating={item.vote_average}
                       title={item.name}
                       genre={this.findGenres(item.genre_ids[0])}
                       imgURL={
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                        item.poster_path
+                          ? 'https://image.tmdb.org/t/p/w500/' +
+                            item.poster_path
+                          : null
                       }
                     />
                   </TouchableOpacity>
@@ -216,12 +237,19 @@ export default class TVScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
+              marginTop: 5,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>Now Airing</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
+              Now Airing
+            </Text>
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -241,6 +269,7 @@ export default class TVScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -264,12 +293,16 @@ export default class TVScreen extends Component {
                       })
                     }>
                     <MovieCard
+                      dark={d ? true : false}
                       key={index}
                       rating={item.vote_average}
                       title={item.name}
                       genre={this.findGenres(item.genre_ids[0])}
                       imgURL={
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                        item.poster_path
+                          ? 'https://image.tmdb.org/t/p/w500/' +
+                            item.poster_path
+                          : null
                       }
                     />
                   </TouchableOpacity>

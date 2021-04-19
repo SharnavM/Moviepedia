@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import MovieCard from '../components/MovieCard';
 
@@ -91,20 +92,36 @@ export default class HomeScreen extends Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getGenres();
     this.getTVGenres();
     this.getTopMovies();
     this.getPopularMovies();
     this.getPopularTV();
+
+    let t = await AsyncStorage.getItem('dark');
+    if (t === null) {
+      await AsyncStorage.setItem('dark', 'false');
+    }
+
+    t = await AsyncStorage.getItem('dark');
+
+    this.setState({dark: t === 'true'});
   }
 
   render() {
+    var d = this.state.dark;
     return (
       <View>
-        <ScrollView style={{backgroundColor: '#fff'}}>
+        <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>Top Movies</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
+              Top Movies
+            </Text>
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -124,6 +141,7 @@ export default class HomeScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -146,6 +164,7 @@ export default class HomeScreen extends Component {
                       })
                     }>
                     <MovieCard
+                      dark={d ? true : false}
                       key={item.id}
                       rating={item.vote_average}
                       title={item.title}
@@ -163,12 +182,17 @@ export default class HomeScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
+              marginTop: 15,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
               Popular Movies
             </Text>
             <TouchableOpacity
@@ -190,6 +214,7 @@ export default class HomeScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -212,6 +237,7 @@ export default class HomeScreen extends Component {
                       })
                     }>
                     <MovieCard
+                      dark={d ? true : false}
                       key={item.id}
                       rating={item.vote_average}
                       title={item.title}
@@ -229,12 +255,17 @@ export default class HomeScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
+              marginTop: 15,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
               Popular Shows
             </Text>
             <TouchableOpacity
@@ -256,6 +287,7 @@ export default class HomeScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -279,12 +311,16 @@ export default class HomeScreen extends Component {
                       });
                     }}>
                     <MovieCard
+                      dark={d ? true : false}
                       key={item.id}
                       rating={item.vote_average}
                       title={item.name}
                       genre={this.findTVGenres(item.genre_ids[0])}
                       imgURL={
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                        item.poster_path
+                          ? 'https://image.tmdb.org/t/p/w500/' +
+                            item.poster_path
+                          : null
                       }
                     />
                   </TouchableOpacity>

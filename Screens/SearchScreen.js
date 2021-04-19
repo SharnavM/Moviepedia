@@ -7,12 +7,17 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  AsyncStorage,
 } from 'react-native';
 
 export default class SearchScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {placeholder: 'Search Movies and TV Shows', results: []};
+    this.state = {
+      placeholder: 'Search Movies and TV Shows',
+      results: [],
+      dark: null,
+    };
   }
 
   getList = async str => {
@@ -31,9 +36,17 @@ export default class SearchScreen extends Component {
     }
   };
 
+  async componentDidMount() {
+    let t = await AsyncStorage.getItem('dark');
+
+    this.setState({dark: t === 'true'});
+  }
+
   render() {
+    var d = this.state.dark;
     return (
-      <View style={{minHeight: '100%', backgroundColor: '#fff'}}>
+      <View
+        style={{minHeight: '100%', backgroundColor: d ? '#242526' : '#fff'}}>
         <TextInput
           onChangeText={txt => this.getList(txt)}
           onFocus={() => {
@@ -42,9 +55,15 @@ export default class SearchScreen extends Component {
           onBlur={() => {
             this.setState({placeholder: 'Search Movies and TV Shows'});
           }}
-          placeholderTextColor="#666"
+          placeholderTextColor={d ? '#7f8492' : '#666'}
           placeholder={this.state.placeholder}
-          style={[styles.textInputStyle]}></TextInput>
+          style={[
+            styles.textInputStyle,
+            {
+              color: d ? '#7f8492' : '#666',
+              backgroundColor: d ? '#18191a' : '#ddd',
+            },
+          ]}></TextInput>
         <View style={{marginTop: 20, paddingBottom: 20}}>
           <FlatList
             renderItem={({item}) => (
@@ -57,24 +76,37 @@ export default class SearchScreen extends Component {
                 }>
                 <View
                   style={{
-                    backgroundColor: '#fff',
+                    backgroundColor: d ? 'transparent' : '#fff',
                     display: 'flex',
                     flexDirection: 'row',
                     marginLeft: 10,
                     marginTop: 5,
-                    borderBottomColor: '#00000040',
+                    borderBottomColor: d ? '#ffffff80' : '#00000040',
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     padding: 10,
                   }}>
-                  <Image
-                    style={{width: 263 / (1.5 * 3), height: 388 / (1.5 * 3)}}
-                    source={{
-                      uri:
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path,
-                    }}
-                  />
+                  {item.poster_path ? (
+                    <Image
+                      style={{width: 263 / (1.5 * 3), height: 388 / (1.5 * 3)}}
+                      source={{
+                        uri:
+                          'https://image.tmdb.org/t/p/w500/' + item.poster_path,
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      style={{width: 263 / (1.5 * 3), height: 388 / (1.5 * 3)}}
+                      source={require('../assets/noMoviePoster.jpg')}
+                    />
+                  )}
+
                   <Text
-                    style={{width: '75%', marginLeft: 5, fontWeight: 'bold'}}>
+                    style={{
+                      width: '75%',
+                      marginLeft: 5,
+                      fontWeight: 'bold',
+                      color: d ? '#f5f6f7' : 'black',
+                    }}>
                     {item.title || item.name}
                   </Text>
                   <Text
@@ -84,6 +116,7 @@ export default class SearchScreen extends Component {
                       marginLeft: item.media_type === 'tv' ? 0 : -20,
                       marginTop: 70,
                       textAlign: 'right',
+                      color: d ? '#f5f6f7' : 'black',
                     }}>
                     {item.media_type === 'tv' ? 'TV' : 'Movie'}
                   </Text>

@@ -11,6 +11,7 @@ export default class MovieCard extends Component {
   componentDidMount() {}
 
   render() {
+    var d = this.props.dark;
     return (
       <View
         style={[
@@ -18,6 +19,8 @@ export default class MovieCard extends Component {
           {
             transform: [{scale: this.props.scale ? this.props.scale : 1}],
             borderWidth: this.props.border ? StyleSheet.hairlineWidth : 0,
+            backgroundColor: d ? '#18191A' : 'transparent',
+            borderColor: d ? '#f5f6f8' : 'black',
           },
         ]}>
         {this.props.imgURL ? (
@@ -45,12 +48,14 @@ export default class MovieCard extends Component {
             source={require('../assets/noMoviePoster.jpg')}
           />
         )}
-        <Text style={styles.titleStyle}>
+        <Text style={[styles.titleStyle, {color: d ? '#f5f6f7' : 'black'}]}>
           {this.props.title.length > 28
             ? `${this.props.title.substr(0, 30)}...`
             : this.props.title}
         </Text>
-        <Text style={styles.GenreStyle}>{this.props.genre}</Text>
+        <Text style={[styles.GenreStyle, {color: d ? '#f5f6f7' : 'black'}]}>
+          {this.props.genre}
+        </Text>
         {this.props.rating ? (
           <View
             style={{
@@ -69,7 +74,12 @@ export default class MovieCard extends Component {
               source={require('../assets/star.png')}
             />
 
-            <Text style={{fontSize: 8, marginLeft: 2}}>
+            <Text
+              style={{
+                fontSize: 8,
+                marginLeft: 2,
+                color: d ? '#f5f6f7' : 'black',
+              }}>
               {this.props.rating}
             </Text>
           </View>

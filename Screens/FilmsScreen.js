@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import GenreCard from '../components/GenreCard';
 import MovieCard from '../components/MovieCard';
@@ -19,6 +20,7 @@ export default class FilmsScreen extends Component {
       upcoming: [],
       nowPlaying: [],
       upcomingURL: '',
+      dark: null,
     };
   }
 
@@ -60,7 +62,6 @@ export default class FilmsScreen extends Component {
 
   getBG = async id => {
     var page = Math.floor(Math.random() * 4 + 1);
-    console.log(page);
     var res = await fetch(
       `https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&with_genres=${id}&page=${page}`,
     );
@@ -90,8 +91,6 @@ export default class FilmsScreen extends Component {
       }-${mm}-${dd}`,
     });
 
-    console.log(this.state.upcomingURL);
-
     res = await res.json();
 
     res = res.results;
@@ -99,18 +98,26 @@ export default class FilmsScreen extends Component {
     this.setState({upcoming: res});
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getGenre();
     this.getUpcoming();
     this.getNowPlaying();
+
+    let t = await AsyncStorage.getItem('dark');
+    this.setState({dark: t === 'true'});
   }
 
   render() {
+    var d = this.state.dark;
     return (
       <View>
-        <ScrollView style={{backgroundColor: '#fff'}}>
+        <ScrollView style={{backgroundColor: d ? '#242526' : '#fff'}}>
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
               Browse by Genre
             </Text>
           </View>
@@ -127,6 +134,7 @@ export default class FilmsScreen extends Component {
                       })
                     }>
                     <GenreCard
+                      dark={d ? true : false}
                       imgURL={this.state.bgImages[ind]}
                       key={ind}
                       genre={item.name}
@@ -161,12 +169,18 @@ export default class FilmsScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>Upcoming</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
+              Upcoming
+            </Text>
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -187,6 +201,7 @@ export default class FilmsScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -204,18 +219,21 @@ export default class FilmsScreen extends Component {
                 index < 9 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      console.log(item.id);
                       this.props.navigation.navigate('MovieDetails', {
                         itemID: item.id,
                       });
                     }}>
                     <MovieCard
+                      dark={d ? true : false}
                       key={item.id}
                       rating={item.vote_average}
                       title={item.title}
                       genre={this.findGenres(item.genre_ids[0])}
                       imgURL={
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                        item.poster_path
+                          ? 'https://image.tmdb.org/t/p/w500/' +
+                            item.poster_path
+                          : null
                       }
                     />
                   </TouchableOpacity>
@@ -225,12 +243,19 @@ export default class FilmsScreen extends Component {
           </ScrollView>
           <View
             style={{
-              borderBottomColor: '#00000040',
+              borderBottomColor: d ? '#ffffff80' : '#00000040',
               borderBottomWidth: StyleSheet.hairlineWidth,
+              marginTop: 15,
             }}
           />
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Text style={[styles.mainTitle, {marginTop: 15}]}>Now Playing</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {marginTop: 15, color: d ? '#f5f6f7' : 'black'},
+              ]}>
+              Now Playing
+            </Text>
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -250,6 +275,7 @@ export default class FilmsScreen extends Component {
                   {
                     fontSize: 10,
                     textAlignVertical: 'center',
+                    color: d ? '#f5f6f7' : 'black',
                   },
                 ]}>
                 See All &gt;
@@ -272,12 +298,16 @@ export default class FilmsScreen extends Component {
                       })
                     }>
                     <MovieCard
+                      dark={d ? true : false}
                       key={item.id}
                       rating={item.vote_average}
                       title={item.title}
                       genre={this.findGenres(item.genre_ids[0])}
                       imgURL={
-                        'https://image.tmdb.org/t/p/w500/' + item.poster_path
+                        item.poster_path
+                          ? 'https://image.tmdb.org/t/p/w500/' +
+                            item.poster_path
+                          : null
                       }
                     />
                   </TouchableOpacity>
