@@ -38,7 +38,6 @@ export default class SettingsScreen extends Component {
     );
 
     await AsyncStorage.setItem('fontScale', val + '');
-    console.log(val);
     this.setState({sliderVal: val});
   };
 
